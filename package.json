@@ -4,8 +4,9 @@
   "description": "a simple to use multi-protocol riak client",
   "main": "index.js",
   "dependencies": {
-    "riakpbc": "latest",
-    "hyperquest": "latest"
+    "async": "^0.9.0",
+    "hyperquest": "latest",
+    "riakpbc": "latest"
   },
   "devDependencies": {
     "nodeunit": "",
