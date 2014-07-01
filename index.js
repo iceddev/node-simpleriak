@@ -1,3 +1,4 @@
+var utils = require('./lib/utils');
 var backends = require('./lib/backends');
 
 function SimpleRiak(options) {
@@ -7,6 +8,10 @@ function SimpleRiak(options) {
 
     if (options.bucket) {
         this.defaults.bucket = options.bucket;
+    }
+
+    if (options.content_type) {
+        this.defaults.content_type = options.content_type;
     }
 
     this.server.host = options.host || '127.0.0.1';
@@ -26,7 +31,7 @@ SimpleRiak.prototype.getBucket = function (params, callback) {
     }
 
     var bucket = params.bucket || this.defaults.bucket;
-    
+
     if (!bucket) {
         return callback(new Error('No bucket specified'));
     }
@@ -37,7 +42,7 @@ SimpleRiak.prototype.getBucket = function (params, callback) {
 SimpleRiak.prototype.setBucket = function (params, callback) {
     var bucket = params.bucket || this.defaults.bucket;
     delete params.bucket;
-    
+
     if (!bucket) {
         return callback(new Error('No bucket specified'));
     }
@@ -53,7 +58,7 @@ SimpleRiak.prototype.getKeys = function (params, callback) {
 
     var bucket = params.bucket || this.defaults.bucket;
     delete params.bucket;
-    
+
     if (!bucket) {
         return callback(new Error('No bucket specified'));
     }
@@ -64,8 +69,15 @@ SimpleRiak.prototype.getKeys = function (params, callback) {
 SimpleRiak.prototype.get = function (params, callback) {
     var bucket = params.bucket || this.defaults.bucket;
     var key = params.key;
-    delete params.bucket;
-    delete params.key;
+    var paramsWithDefaults = utils.paramsWithDefaults(params, this.defaults);
+
+    if (!bucket) {
+        return callback(new Error('No bucket specified'));
+    }
+
+    this.backend.get(bucket, key, paramsWithDefaults, callback);
+};
+
 
     if (!bucket) {
         return callback(new Error('No bucket specified'));
@@ -77,14 +89,13 @@ SimpleRiak.prototype.get = function (params, callback) {
 SimpleRiak.prototype.delete = function (params, callback) {
     var bucket = params.bucket || this.defaults.bucket;
     var key = params.key;
-    delete params.bucket;
-    delete params.key;
+    var paramsWithDefaults = utils.paramsWithDefaults(params, this.defaults);
 
     if (!bucket) {
         return callback(new Error('No bucket specified'));
     }
 
-    this.backend.delete(bucket, key, params, callback);
+    this.backend.delete(bucket, key, paramsWithDefaults, callback);
 };
 
 SimpleRiak.prototype.ping = function (callback) {
