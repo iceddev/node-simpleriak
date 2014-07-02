@@ -6,6 +6,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "hyperquest": "latest",
+    "lodash": "^2.4.1",
     "riakpbc": "latest"
   },
   "devDependencies": {

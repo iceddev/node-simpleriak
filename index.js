@@ -3,7 +3,9 @@ var backends = require('./lib/backends');
 
 function SimpleRiak(options) {
     options = options || {};
-    this.defaults = {};
+    this.defaults = {
+        content: {}
+    };
     this.server = {};
 
     if (options.bucket) {
@@ -11,7 +13,7 @@ function SimpleRiak(options) {
     }
 
     if (options.content_type) {
-        this.defaults.content_type = options.content_type;
+        this.defaults.content.content_type = options.content_type;
     }
 
     this.server.host = options.host || '127.0.0.1';
